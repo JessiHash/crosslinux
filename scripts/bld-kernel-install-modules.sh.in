@@ -1,0 +1,196 @@
+#!@@CL_BASH@@
+
+
+# This file is part of the crosslinux software.
+# The license which this software falls under is GPLv2 as follows:
+#
+# Copyright (C) 2014-2014 Douglas Jerome <djerome@crosslinux.org>
+#
+# This program is free software; you can redistribute it and/or modify it
+# under the terms of the GNU General Public License as published by the Free
+# Software Foundation; either version 2 of the License, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful, but WITHOUT
+# ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+# FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+# more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+# Place, Suite 330, Boston, MA  02111-1307  USA
+
+
+# *****************************************************************************
+#
+# PROGRAM DESCRIPTION
+#
+#      This script installs the crosslinux target kernel modules under fakeroot.
+#
+# CHANGE LOG
+#
+#      2014-03-24  drj  New file generation.
+#
+# *****************************************************************************
+
+
+# *************************************************************************** #
+#                                                                             #
+# F I L T E R E D   C O N S T A N T S                                         #
+#                                                                             #
+# *************************************************************************** #
+
+cl_libdir="@@CL_LIBDIR@@"
+
+
+# *************************************************************************** #
+#                                                                             #
+# F U N C T I O N S                                                           #
+#                                                                             #
+# *************************************************************************** #
+
+
+# *****************************************************************************
+#
+# *****************************************************************************
+
+none() {
+
+return 0
+
+}
+
+
+# *************************************************************************** #
+#                                                                             #
+# M A I N   P R O G R A M                                                     #
+#                                                                             #
+# *************************************************************************** #
+
+
+# *****************************************************************************
+# Set up the shell functions and environment variables.
+# *****************************************************************************
+
+declare K_KERNEL_SOURCE_PATH="" # rooted dirname
+declare K_KERNEL_SOURCE_NAME="" # like "linux-2.6.32.60"
+declare K_KERNEL_SOURCE_EXTN="" # like ".tar.xz"
+declare K_KERNEL_SOURCE_URLS="" # at lest one URL
+declare K_KERNEL_PATCH_PATH=""  # rooted dirname
+declare K_KERNEL_CONFIG=""      # rooted pathname
+declare K_KERNEL_MODULES="no"
+
+declare    kver=""
+declare    bitch=""
+declare -i NJOBS=""
+
+# This script is expected to be invoked in the build/bld/ directory.  Go up to
+# the project directory and setup the environment; do this with a hard-coded
+# path because there is no symbol yet.
+
+cd "../.."
+
+source ./crosslinux-config.sh # target build configuration
+source ${cl_libdir}/scripts/_constants.sh # build support
+source ${cl_libdir}/scripts/_functions.sh # build support
+
+CL_config_setup || {
+	cd "${TARGET_BLD_DIR}"
+	exit 1
+}
+
+cd "${TARGET_BLD_DIR}"
+
+
+# *****************************************************************************
+# Main Program
+# *****************************************************************************
+
+# This script is design to run in a particular context; it is expected to be
+# running under fakeroot and in the ${TARGET_BLD_DIR} directory; this script's
+# job is to complete the modules installation of a kernel build process.  This
+# means the kernel build directory is in ${TARGET_BLD_DIR} and has been built
+# and is waiting for 'make modules_install'.
+#
+# Standard output and standard error are being directed to a log file and the
+# variable CONSOLE_FD is the standard output file descriptor.
+
+# Find the kernel path, either from the site configuration given in the project
+# config file or from the cross-tool chain which should export it.  This shell
+# function is required to set K_KERNEL_SOURCE_PATH, K_KERNEL_SOURCE_NAME, and
+# K_KERNEL_SOURCE_EXTN.
+#
+CL_kernel_find || exit 1
+
+# Figure the number of parallel jobs to give to make.
+#
+bitch=${K_NCPU:-1}
+[[ -z "${bitch//[0-9]}" ]] && NJOBS=$((${bitch:-1} + 1)) || NJOBS=2
+unset _bitch
+[[ x"${CONFIG_PARALLEL_JOBS:-}" == x"y" ]] || NJOBS=1
+
+NJOBS=1 # XXX Because fakeroot hangs when make runs multiple jobs.
+
+_bDir="${TARGET_K_ROOT_DIR}"
+_pDir="${TARGET_K_PKGS_DIR}"
+
+# Install the kernel modules into ${TTYLINUX_K_ROOT_DIR}
+#
+CL_logcom "Install the kernel modules into:"
+CL_logcom "=> ${_bDir}"
+cd "${K_KERNEL_SOURCE_NAME}"
+source "${CROSSLINUX_SCRIPT_DIR}/_xbt_env_set"
+_cmd="PATH=\"${CONFIG_XTOOL_BIN_DIR}:${PATH}\" \
+make -j ${NJOBS} modules_install \
+	V=1 \
+	ARCH=${CONFIG_LINUX_ARCH} \
+	CROSS_COMPILE=${CONFIG_XTOOL_NAME}- \
+	INSTALL_MOD_PATH=${_bDir}"
+CL_logcom ""
+CL_logcmd "${_cmd}"
+CL_logcom ""
+unset _cmd
+source "${CROSSLINUX_SCRIPT_DIR}/_xbt_env_clr"
+cd ..
+
+kver="${K_KERNEL_SOURCE_NAME##*-}"
+
+# Scrub the modules directory.
+#
+CL_logcom "Scrub the modules directory; remove these:"
+CL_logcom "=> ${_bDir}/lib/modules/${kver}/build"
+CL_logcom "=> ${_bDir}/lib/modules/${kver}/source"
+rm --force "${_bDir}/lib/modules/${kver}/build"
+rm --force "${_bDir}/lib/modules/${kver}/source"
+
+# Make the kernel modules binary package in ${TTYLINUX_K_PKGS_DIR}
+#
+_uTarBall="${_pDir}/kmodules-${kver}-${CONFIG_CPU_ARCH}.tar"
+_cTarBall="${_pDir}/kmodules-${kver}-${CONFIG_CPU_ARCH}.tbz"
+_cmd1="tar --directory ${_bDir} --create --file=\"${_uTarBall}\" lib"
+_cmd2="bzip2 --force \"${_uTarBall}\""
+_cmd3="mv --force \"${_uTarBall}.bz2\" \"${_cTarBall}\""
+_cmd4="cp \"${_cTarBall}\" \"${TARGET_PKGBIN_DIR}\""
+CL_logcmd "${_cmd1}"
+CL_logcmd "${_cmd2}"
+CL_logcmd "${_cmd3}"
+CL_logcmd "${_cmd4}"
+unset _cmd1
+unset _cmd2
+unset _cmd3
+unset _cmd4
+unset _uTarBall
+unset _cTarBall
+
+unset _bDir
+unset _pDir
+
+
+# *****************************************************************************
+# Exit with Status
+# *****************************************************************************
+
+exit 0
+
+
+# end of file

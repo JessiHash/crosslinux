@@ -1,0 +1,6 @@
+# vim: syntax=sh
+usr/include/mpf2mpfr.h
+usr/include/mpfr.h
+usr/lib/libmpfr.so
+usr/lib/libmpfr.so.4
+usr/lib/libmpfr.so.4.1.1

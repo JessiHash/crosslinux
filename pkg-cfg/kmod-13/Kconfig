@@ -1,6 +1,0 @@
-config BLD_KMOD_13
-	bool
-	default n
-	prompt "Build kmod-13"
-	---help---
-	  Select this option to cross-build kmod.

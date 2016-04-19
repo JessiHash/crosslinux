@@ -92,9 +92,9 @@ you see in the integ/ directory.
 
 crosstool-NG Web Site ......... http://crosstool-ng.org/
 
-You will download a file named something like "crosstool-ng-1.18.0.tar.bz2".
+You will download a file named something like "crosstool-ng-1.19.0.tar.bz2".
 Think about where you want to untar this, it will create a corresponding
-top-level directory named something like "crosstool-ng-1.18.0", and you will
+top-level directory named something like "crosstool-ng-1.19.0", and you will
 need to keep this directory and another separate directory at the same level
 for a while.
 
@@ -106,17 +106,17 @@ which you untar the downloaded crosstool-ng-<version>.tar.bz file.
 For an example:
 --------------
 You've previously downloaded crosslinux and its files are in directory
-~/projects/cl-dev/ and you have downloaded crosstool-ng-1.18.0.tar.bz into a
-common ~/Download directory.  You now want to untar crosstool-ng-1.18.0.tar.bz
-and ~/projects/cl-dev/integ/crosstool-ng-1.18.0/tools-patches.tbz
+~/projects/cl-dev/ and you have downloaded crosstool-ng-1.19.0.tar.bz into a
+common ~/Download directory.  You now want to untar crosstool-ng-1.19.0.tar.bz
+and ~/projects/cl-dev/integ/crosstool-ng-1.19.0/tools-patches.tbz
 
 $ cd ~/projects
-$ tar xf ~/Download/crosstool-ng-1.18.0.tar.bz
-$ tar xf ~/projects/cl-dev/integ/crosstool-ng-1.18.0/tools-patches.tbz
+$ tar xf ~/Download/crosstool-ng-1.19.0.tar.bz
+$ tar xf ~/projects/cl-dev/integ/crosstool-ng-1.19.0/tools-patches.tbz
 
 You now have directories:
 
-~/projects/crosstool-ng-1.18.0/
+~/projects/crosstool-ng-1.19.0/
 ~/projects/crosstool-patches/
 
 You need to keep both of these directory trees until any and all cross-tool
@@ -133,7 +133,7 @@ another directory tree.
 
 Do these steps, where <version> is the version of crosstool-NG you've actually
 downloaded and is in the directory name.  In the above example <version> is
-"1.18.0".  You might want to copy these steps into an editor, remove the "$ "
+"1.19.0".  You might want to copy these steps into an editor, remove the "$ "
 prompts, replace <version> with the actual version, and then one-at-a-time
 copy-paste each line into a terminal window.
 
@@ -141,7 +141,7 @@ NOTE: The patch is necessary only if there actually is a patch to apply; there
       may be no patch (check it first), in which case it already as been
       incorporated into crosstool-NG.
 
-$ cd ~/Download/crosstool-ng-<version>
+$ cd ~/projects/crosstool-ng-<version>
 $ ./bootstrap
 $ patch -p1 <../cl-dev/integ/crosstool-ng-<version>/export-manifest.patch
 $ ./configure --enable-local

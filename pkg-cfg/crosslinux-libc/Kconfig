@@ -3,7 +3,7 @@ config BLD_CROSSLINUX_LIBC
 	default y
 	prompt "libc -- from the cross-tool chain."
 	---help---
-	  You must have a libc.
+	  You must have a libc.  This comes from the cross-tool chain.
 
 config FORCE_LIBC
 	def_bool y

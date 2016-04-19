@@ -1,0 +1,7 @@
+config BLD_LUA_5p2p3
+	bool
+	default n
+	prompt "Build lua-5.2.3"
+	---help---
+	  Select this option to cross-build lua.  Lua is a powerful, fast,
+	  lightweight, embeddable scripting language.

@@ -1,0 +1,18 @@
+-------------------------------------------------------------------------------
+awk -f ./wrapawk < ./wrapfunc.inp
+/bin/bash ./libtool  --tag=CC   --mode=compile gcc -DHAVE_CONFIG_H -I.     -g -O2 -MT libfakeroot.lo -MD -MP -MF .deps/libfakeroot.Tpo -c -o libfakeroot.lo libfakeroot.c
+libtool: compile:  gcc -DHAVE_CONFIG_H -I. -g -O2 -MT libfakeroot.lo -MD -MP -MF .deps/libfakeroot.Tpo -c libfakeroot.c  -fPIC -DPIC -o .libs/libfakeroot.o
+In file included from libfakeroot.c:223:0:
+wrapped.h:126:27: error: unknown type name 'cap_user_header_t'
+wrapped.h:126:27: error: unknown type name 'cap_user_data_t'
+In file included from libfakeroot.c:224:0:
+wraptmpf.h:378:17: error: unknown type name 'cap_user_header_t'
+wraptmpf.h:378:17: error: unknown type name 'cap_user_data_t'
+In file included from libfakeroot.c:225:0:
+wrapdef.h:126:20: error: unknown type name 'cap_user_header_t'
+wrapdef.h:126:20: error: unknown type name 'cap_user_data_t'
+In file included from libfakeroot.c:226:0:
+-------------------------------------------------------------------------------
+
+install libcap
+

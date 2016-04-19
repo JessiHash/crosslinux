@@ -1,0 +1,6 @@
+config BLD_MAKE_4p0
+	bool
+	default n
+	prompt "Build make-4.0"
+	---help---
+	  Select this option to cross-build make.

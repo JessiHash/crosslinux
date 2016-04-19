@@ -1,6 +1,0 @@
-config BLD_LILO_23p2
-	bool
-	default y
-	prompt "Build lilo-23.2"
-	---help---
-	  Select this option to cross-build lilo.

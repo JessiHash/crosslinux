@@ -6,10 +6,10 @@
 
 if BOARD_BEAGLEBONE
 
-config LOADER_UBOOT_2012p10
+config LOADER_UBOOT_2014p01
 	bool
 	default y
-	prompt "Use the u-boot-2012.10 boot loader"
+	prompt "Use the u-boot-2014.01 boot loader"
 	---help---
 	  This is the available boot loader.
 
@@ -19,7 +19,7 @@ config UBOOT_TARGET
 
 config FORCE_UBOOT
 	def_bool y
-	select LOADER_UBOOT_2012p10
+	select LOADER_UBOOT_2014p01
 
 endif
 
@@ -68,5 +68,5 @@ endif
 config LOADERSUBDIR
         string
         default "syslinux-6.01" if LOADER_SYSLINUX_6p01
-        default "uboot-2012.10" if LOADER_UBOOT_2012p10
+        default "uboot-2014.01" if LOADER_UBOOT_2014p01
         default "yaboot"        if LOADER_YABOOT

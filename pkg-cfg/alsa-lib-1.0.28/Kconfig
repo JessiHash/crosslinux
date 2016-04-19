@@ -1,0 +1,7 @@
+config BLD_ALSA_LIB_1p0p28
+	bool
+	default n
+	prompt "Build alsa-lib-1.0.28"
+	---help---
+	  Select this option to cross-build the ALSA (Advanced Linux Sound
+	  Architecture) library.

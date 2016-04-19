@@ -1,0 +1,18 @@
+o If fakeroot doesn't build, make sure you have installed its dependencies:
+  openssl-devel gnutls-devel libcap-devel
+
+--------------------------------------------------------------------------------
+
+Code Issue [01] - alsa-lib-1.0.28 bld.sh
+
+'make install' into ${TARGET_SYSROOT_DIR} results in a problem with a .la
+file.  For some reason, installing into some other place avoids the problem,
+so install into some other place than copy into ${TARGET_SYSROOT_DIR}.
+
+Code Issue [02] - pkg-bld/*/bld.sh
+
+Under fakeroot, 'sed -i <file> ...' leaves file with 000 permssions, so chmod
+the file after the sed command.
+
+--------------------------------------------------------------------------------
+

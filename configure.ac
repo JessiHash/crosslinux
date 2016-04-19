@@ -2,7 +2,7 @@
 # a Makefile.
 
 # Inspired by configure.ac from crosstool-NG
-# (C) 2013-2013 Douglas Jerome <djerome@crosslinux.org>
+# (C) 2013-2014 Douglas Jerome <djerome@crosslinux.org>
 # (C) 2013 crosstool-NG authors. See complete list at:
 #     http://crosstool-ng.org/hg/crosstool-ng/log/tip/configure.ac
 
@@ -54,8 +54,8 @@ if test x$enable_local = "xYES"; then enable_local=yes; fi
 # -----------------------------------------------------------------------------
 
 ACX_PATH_PROG_REQ([bzip2],    [bzip2])
-ACX_PATH_PROG_REQ([gzip],     [gzip])
 ACX_PATH_PROG_REQ([find],     [find])
+ACX_PATH_PROG_REQ([gzip],     [gzip])
 ACX_PATH_PROG_REQ([install],  [install])
 ACX_PATH_PROG_REQ([ln],       [ln])
 ACX_PATH_PROG_REQ([make],     [make])

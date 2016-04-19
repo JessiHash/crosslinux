@@ -1,0 +1,7 @@
+config BLD_THTTPD_2p25B
+	bool
+	default n
+	prompt "Build thttpd-2.25b"
+	---help---
+	  Select this option to cross-build thttpd, the tiny/turbo/throttling
+	  HTTP server.

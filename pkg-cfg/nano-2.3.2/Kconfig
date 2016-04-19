@@ -1,0 +1,6 @@
+config BLD_NANO_2p3p2
+	bool
+	default n
+	prompt "Build nano-2.3.2"
+	---help---
+	  Select this option to cross-build nano.  nano is a small editor.

@@ -274,6 +274,7 @@ echo "b.     - building the package"
 echo "i.     - installing the package into sysroot"
 echo "f.     - finding installed files"
 echo "m_xxx. - looking for man pages to compress"
+echo "s.     - running site package script"
 echo "p.     - creating installable package"
 echo ""
 

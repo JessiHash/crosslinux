@@ -1,0 +1,7 @@
+config BLD_MPC_1p0p1
+	bool
+	default n
+	prompt "Build mpc-1.0.1"
+	---help---
+	  Select this option to cross-build mpc, a support library mainly for
+	  gcc.

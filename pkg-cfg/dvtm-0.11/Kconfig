@@ -1,0 +1,7 @@
+config BLD_DVTM_0p11
+	bool
+	default n
+	prompt "Build dvtm-0.11"
+	---help---
+	  Select this option to cross-build dvtm.  dvtm is a console window
+	  manager; it make easier work with multiple console based programs.

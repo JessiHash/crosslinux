@@ -3,7 +3,8 @@ config BLD_RETAWQ_0p2p6C
 	default y
 	prompt "Build retawq-0.2.6c"
 	---help---
-	  Select this option to cross-build retawq.
+	  Select this option to cross-build retawq.  retawq is an interactive,
+	  multi-threaded network client (web browser) for text terminals.
 
 config RETAWQ_HAS_THREADING
 	bool

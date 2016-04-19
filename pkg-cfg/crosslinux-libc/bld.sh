@@ -83,21 +83,26 @@ srcdir=$("${CONFIG_XTOOL_BIN_DIR}/${CONFIG_XTOOL_NAME}-cc" -print-sysroot)
 
 # What a pain.  I want this:
 # cp --no-dereference --recursive "${srcdir}"/* "${TARGET_SYSROOT_DIR}"
+#      wherein --no-dereference : never follow symbolic links in SOURCE
+#              --recursive      : copy directories recursively
 #
-# But the source files may be read-only, and I do not want read-only files in
-# the project sysroot.  Also, there may be some directory symlinks which I do
-# not want.
+# But the source files probably are read-only; I do not want read-only files
+# in the project sysroot.  Some files are not readable by 'others' and that
+# does not make sense because these are runtime libraries and tools.  Also,
+# there may be some directory symlinks which I do not want.
 #
 # The following gyrations find all the non-directory files from the cross-tool
 # chain sysroot, filters the directory symlinks, makes any needed directory
-# path, copies the file to the project sysroot, then adds group and user write
-# and execute permissions if the file is not a symlink.
+# path, copies the file to the project sysroot, then, if the file is not a
+# symlink, set permissions 775 for a .so file and 644 otherwise.
 #
 _ts=$(date)
 find "${srcdir}" ! -type d | while read srcname; do
 	CL_logcom "~~~~~ ${srcname#${srcdir}/}"
 	pitchit=0
 	if [[ -L "${srcname}" ]]; then
+		# If this is a symlink to a directory, then set 'pitchit' to
+                # not include this in the copy-to the project sysroot.
 		[[ -d "$(readlink -f ${srcname})" ]] && pitchit=1 || true
 	fi
 	if [[ ${pitchit} -eq 0 ]]; then
@@ -108,7 +113,12 @@ find "${srcdir}" ! -type d | while read srcname; do
 		fi
 		cp --archive --verbose "${srcname}" "${dstpath}"
 		[[ ! -L "${dstfile}" ]] && {
-			chmod gu+wx "${dstfile}"
+			if [[ "${dstfile}" =~ ".so" ]]; then
+				chmod 775 "${dstfile}"
+			else
+				chmod ugo+r "${dstfile}"
+				chmod u+w   "${dstfile}"
+			fi
 			touch -d "${_ts}" "${dstfile}"
 		} || true
 	else

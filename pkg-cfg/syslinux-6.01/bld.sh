@@ -95,13 +95,16 @@ cp "${CROSSLINUX_LOADER_DIR}/"*.cfg .
 for _f in *.msg; do
 	if [[ -f "${_f}" ]]; then
 		sed -i ${_f} -e "s?www\.crosslinux\.org?${CONFIG_BRAND_URL}?g"
+	        chmod 644 "${_f}" # Code Issue [02] -- See "A2_Known_Issues_And_Problems.txt".
 		sed -i ${_f} -e "s?crosslinux?${CONFIG_BRAND_NAME}?g"
+	        chmod 644 "${_f}" # Code Issue [02] -- See "A2_Known_Issues_And_Problems.txt".
 	fi
 done
 
 for _f in *.cfg; do
 	if [[ -f "${_f}" ]]; then
 		sed -i ${_f} -e "s?crosslinux?${CONFIG_BRAND_NAME}?g"
+	        chmod 644 "${_f}" # Code Issue [02] -- See "A2_Known_Issues_And_Problems.txt".
 	fi
 done
 

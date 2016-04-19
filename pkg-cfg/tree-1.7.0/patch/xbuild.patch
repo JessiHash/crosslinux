@@ -1,0 +1,22 @@
+Author: Douglas Jerome <djerome@crosslinux.net>
+Date:   Mon Jan 12 19:50:21 MST 2015
+
+        Patch tree-1.7.0/Makefile to use CROSS_COMPILE and DESTDIR.
+
+        Signed-off-by: Douglas Jerome <djerome@crosslinux.net>
+
+diff -Naur tree-1.7.0-OLD/Makefile tree-1.7.0-NEW/Makefile
+--- tree-1.7.0-OLD/Makefile	2014-04-18 10:35:39.000000000 -0700
++++ tree-1.7.0-NEW/Makefile	2015-01-12 19:44:43.741871211 -0700
+@@ -16,9 +16,9 @@
+ # along with this program; if not, write to the Free Software
+ # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ 
+-prefix = /usr
++prefix=${DESTDIR}/usr
+ 
+-CC=gcc
++CC=${CROSS_COMPILE}gcc
+ 
+ VERSION=1.7.0
+ TREE_DEST=tree

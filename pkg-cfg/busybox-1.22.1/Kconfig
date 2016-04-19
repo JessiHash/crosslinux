@@ -1,0 +1,15 @@
+config BLD_BUSYBOX_1p22p1
+	bool
+	default y
+	prompt "Build busybox-1.22.1"
+	---help---
+	  Crosslinux systems use BusyBox.  You can't fly without.
+
+config FORCE_BUSYBOX
+	def_bool y
+	select BLD_BUSYBOX_1p22p1
+
+config BUSYBOX_HAS_LOSETUP
+	bool
+	default y if ! HAVE_UTIL_LINUX
+	default n if HAVE_UTIL_LINUX = y

@@ -1,0 +1,11 @@
+# vim: syntax=sh
+bin/kmod
+bin/lsmod
+lib/libkmod.so
+lib/libkmod.so.2
+lib/libkmod.so.2.2.6
+sbin/depmod
+sbin/insmod
+sbin/modinfo
+sbin/modprobe
+sbin/rmmod

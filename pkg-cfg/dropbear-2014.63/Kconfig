@@ -1,0 +1,8 @@
+config BLD_DROPBEAR_2014p63
+	bool
+	default y
+	prompt "Build dropbear-2014.63"
+	---help---
+	  Select this option to cross-build dropbear.  Dropbear is a small
+	  SSH v2 server and client package.  It includes SCP for copying files
+	  between hosts.

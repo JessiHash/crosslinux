@@ -1,6 +1,6 @@
 # vim: syntax=sh
 dev/aio
-dev/console
+# dev/console -- provided in crosslinux-basefs
 dev/core
 dev/fd
 dev/fd0
@@ -150,7 +150,7 @@ dev/mmcblk0p9
 fi
 dev/mouse
 dev/netlink
-dev/null
+# dev/null -- provided in crosslinux-basefs
 dev/nvram
 dev/parport0
 dev/port

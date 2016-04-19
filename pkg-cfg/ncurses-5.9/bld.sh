@@ -81,7 +81,6 @@ CFLAGS="${CONFIG_CFLAGS}" \
 	--build=${MACHTYPE} \
 	--host=${CONFIG_XTOOL_NAME} \
 	--prefix=/usr \
-	--libdir=/lib \
 	--mandir=/usr/share/man \
 	--enable-shared \
 	--enable-overwrite \
@@ -94,7 +93,8 @@ CFLAGS="${CONFIG_CFLAGS}" \
 	--without-ada \
 	--without-debug \
 	--without-gpm \
-	--without-normal || return 0
+	--without-normal \
+	--without-progs || return 0
 source "${CROSSLINUX_SCRIPT_DIR}/_xbt_env_clr"
 
 cd ..
@@ -141,64 +141,43 @@ PATH="${CONFIG_XTOOL_BIN_DIR}:${PATH}" make install || return 1
 source "${CROSSLINUX_SCRIPT_DIR}/_xbt_env_clr"
 cd ..
 
-# ****************************************************** #
-#                                                        #
-# This is the install results; it is not what I want.    #
-#                                                        #
-# sysroot/lib/libcurses.so -> libncurses.so.5.9*         #
-# sysroot/lib/libform[w].so -> libform.so.5*             #
-# sysroot/lib/libform[w].so.5 -> libform.so.5.9*         #
-# sysroot/lib/libform[w].so.5.9*                         #
-# sysroot/lib/libmenu[w].so -> libmenu.so.5*             #
-# sysroot/lib/libmenu[w].so.5 -> libmenu.so.5.9*         #
-# sysroot/lib/libmenu[w].so.5.9*                         #
-# sysroot/lib/libncurses++[w].a                          #
-# sysroot/lib/libncurses[w].so -> libncurses.so.5*       #
-# sysroot/lib/libncurses[w].so.5 -> libncurses.so.5.9*   #
-# sysroot/lib/libncurses[w].so.5.9*                      #
-# sysroot/lib/libpanel[w].so -> libpanel.so.5*           #
-# sysroot/lib/libpanel[w].so.5 -> libpanel.so.5.9*       #
-# sysroot/lib/libpanel[w].so.5.9*                        #
-#                                                        #
-# sysroot/usr/bin/captoinfo -> tic*                      #
-# sysroot/usr/bin/clear*                                 #
-# sysroot/usr/bin/infocmp*                               #
-# sysroot/usr/bin/infotocap -> tic*                      #
-# sysroot/usr/bin/ncurses5-config*                       #
-# sysroot/usr/bin/reset -> tset*                         #
-# sysroot/usr/bin/tabs*                                  #
-# sysroot/usr/bin/tic*                                   #
-# sysroot/usr/bin/toe*                                   #
-# sysroot/usr/bin/tput*                                  #
-# sysroot/usr/bin/tset*                                  #
-#                                                        #
-# sysroot/usr/lib/terminfo -> ../share/terminfo/         #
-#                                                        #
-# ****************************************************** #
-
-# Move any .a files from /lib to /usr/lib; there seems to be only one .a file:
-# libncurses++[w].a
-#
-_sysroot="${TARGET_SYSROOT_DIR}"
-for _file in ${_sysroot}/lib/libncurses++*.a; do
-	if [[ -f "${_file}" ]]; then mv ${_file} ${_sysroot}/usr/lib/; fi
-done; unset _file
-unset _sysroot
+# ******************************************************** #
+#                                                          #
+# sysroot/usr/lib/libform[w].so -> libform.so.5*           #
+# sysroot/usr/lib/libform[w].so.5 -> libform.so.5.9*       #
+# sysroot/usr/lib/libform[w].so.5.9*                       #
+# sysroot/usr/lib/libmenu[w].so -> libmenu.so.5*           #
+# sysroot/usr/lib/libmenu[w].so.5 -> libmenu.so.5.9*       #
+# sysroot/usr/lib/libmenu[w].so.5.9*                       #
+# sysroot/usr/lib/libncurses++[w].a                        #
+# sysroot/usr/lib/libncurses[w].so -> libncurses.so.5*     #
+# sysroot/usr/lib/libncurses[w].so.5 -> libncurses.so.5.9* #
+# sysroot/usr/lib/libncurses[w].so.5.9*                    #
+# sysroot/usr/lib/libpanel[w].so -> libpanel.so.5*         #
+# sysroot/usr/lib/libpanel[w].so.5 -> libpanel.so.5.9*     #
+# sysroot/usr/lib/libpanel[w].so.5.9*                      #
+#                                                          #
+# sysroot/usr/bin/ncurses[w]5-config*                      #
+#                                                          #
+# sysroot/usr/lib/terminfo -> ../share/terminfo/           #
+#                                                          #
+# ******************************************************** #
 
 _w=${CONFIG_NCURSES_HAS_WIDEC:+w} # Either "" or "w"
 _usrlib="${TARGET_SYSROOT_DIR}/usr/lib"
 
 # Many applications expect the linker to find non-wide character ncurses
-# libraries; in /usr/lib make them link with /lib libraries by way of linker
+# libraries; make them use the wide libraries by way of linker
 # scripts.
 #
-for _lib in form menu ncurses panel ; do
-	rm --force --verbose          ${_usrlib}/lib${_lib}.so
-	echo "INPUT(-l${_lib}${_w})" >${_usrlib}/lib${_lib}.so
-done; unset _lib
+if [[ -n "${_w}" ]]; then
+	for _lib in form menu ncurses panel ; do
+		rm --force --verbose          ${_usrlib}/lib${_lib}.so
+		echo "INPUT(-l${_lib}${_w})" >${_usrlib}/lib${_lib}.so
+	done; unset _lib
+fi
 
-# Do something in /usr/lib about builds that look for -lcurses, -lcursesw and
-# -ltinfo.
+# Do something in about builds that look for -lcurses, -lcursesw and -ltinfo.
 #
 if [[ -n "${_w}" ]]; then
 	rm --force --verbose      ${_usrlib}/libcursesw.so
@@ -215,7 +194,7 @@ unset _usrlib
 if [[ -d "rootfs/" ]]; then
 	find "rootfs/" ! -type d -exec touch {} \;
 	cp --archive --force rootfs/* "${TARGET_SYSROOT_DIR}"
-fi
+fi       
 
 PKG_STATUS=""
 return 0

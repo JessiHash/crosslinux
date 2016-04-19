@@ -1,0 +1,7 @@
+config BLD_PPL_0p11
+	bool
+	default n
+	prompt "Build ppl-0.11"
+	---help---
+	  Select this option to cross-build ppl, a support library mainly for
+	  gcc.

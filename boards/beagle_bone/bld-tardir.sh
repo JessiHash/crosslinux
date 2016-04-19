@@ -25,6 +25,11 @@
 # Main Program
 # *****************************************************************************
 
+echo -n "i> Making target/mnt directory ....................... "
+rm --force --recursive mnt
+mkdir mnt
+echo "DONE"
+
 echo -n "i> Gathering boot files .............................. "
 cp ${TARGET_LOADER_DIR}/MLO          sdcard/boot/MLO
 cp ${TARGET_LOADER_DIR}/u-boot.img   sdcard/boot/u-boot.img

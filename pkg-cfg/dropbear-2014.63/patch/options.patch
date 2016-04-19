@@ -1,0 +1,72 @@
+Author: Douglas Jerome <djerome@crosslinux.net>
+Date:   Sat Feb 22 12:52:24 MST 2014
+
+        Define a configuration.  This patch doesn't fix any known problem; it
+        defines a particular dropbear configuration.
+
+        Signed-off-by: Douglas Jerome <djerome@crosslinux.net>
+
+diff -Naur dropbear-2014.63-OLD/options.h dropbear-2014.63-NEW/options.h
+--- dropbear-2014.63-OLD/options.h	2014-02-19 07:05:24.000000000 -0700
++++ dropbear-2014.63-NEW/options.h	2014-02-22 12:50:33.506257067 -0700
+@@ -21,13 +21,13 @@
+ 
+ /* Default hostkey paths - these can be specified on the command line */
+ #ifndef DSS_PRIV_FILENAME
+-#define DSS_PRIV_FILENAME "/etc/dropbear/dropbear_dss_host_key"
++#define DSS_PRIV_FILENAME "/etc/ssh/dss_host_key"
+ #endif
+ #ifndef RSA_PRIV_FILENAME
+-#define RSA_PRIV_FILENAME "/etc/dropbear/dropbear_rsa_host_key"
++#define RSA_PRIV_FILENAME "/etc/ssh/rsa_host_key"
+ #endif
+ #ifndef ECDSA_PRIV_FILENAME
+-#define ECDSA_PRIV_FILENAME "/etc/dropbear/dropbear_ecdsa_host_key"
++#define ECDSA_PRIV_FILENAME "/etc/ssh/ecdsa_host_key"
+ #endif
+ 
+ /* Set NON_INETD_MODE if you require daemon functionality (ie Dropbear listens
+@@ -41,7 +41,7 @@
+  * Both of these flags can be defined at once, don't compile without at least
+  * one of them. */
+ #define NON_INETD_MODE
+-#define INETD_MODE
++/* #define INETD_MODE */
+ 
+ /* Setting this disables the fast exptmod bignum code. It saves ~5kB, but is
+  * perhaps 20% slower for pubkey operations (it is probably worth experimenting
+@@ -55,7 +55,7 @@
+ #define DROPBEAR_SMALL_CODE
+ 
+ /* Enable X11 Forwarding - server only */
+-#define ENABLE_X11FWD
++/* #define ENABLE_X11FWD */
+ 
+ /* Enable TCP Fowarding */
+ /* 'Local' is "-L" style (client listening port forwarded via server)
+@@ -94,9 +94,9 @@
+ #define DROPBEAR_3DES
+ #define DROPBEAR_AES256
+ /* Compiling in Blowfish will add ~6kB to runtime heap memory usage */
+-/*#define DROPBEAR_BLOWFISH*/
+-#define DROPBEAR_TWOFISH256
+-#define DROPBEAR_TWOFISH128
++/* #define DROPBEAR_BLOWFISH   */
++/* #define DROPBEAR_TWOFISH256 */
++/* #define DROPBEAR_TWOFISH128 */
+ 
+ /* Enable "Counter Mode" for ciphers. This is more secure than normal
+  * CBC mode against certain attacks. This adds around 1kB to binary 
+@@ -270,9 +270,9 @@
+ /* if you want to enable running an sftp server (such as the one included with
+  * OpenSSH), set the path below. If the path isn't defined, sftp will not
+  * be enabled */
+-#ifndef SFTPSERVER_PATH
+-#define SFTPSERVER_PATH "/usr/libexec/sftp-server"
+-#endif
++/* #ifndef SFTPSERVER_PATH                            */
++/* #define SFTPSERVER_PATH "/usr/libexec/sftp-server" */
++/* #endif                                             */
+ 
+ /* This is used by the scp binary when used as a client binary. If you're
+  * not using the Dropbear client, you'll need to change it */

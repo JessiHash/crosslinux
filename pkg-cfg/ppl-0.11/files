@@ -1,0 +1,13 @@
+# vim: syntax=sh
+usr/include/ppl.hh
+usr/include/ppl_c.h
+usr/include/pwl.hh
+usr/lib/libppl.so
+usr/lib/libppl.so.9
+usr/lib/libppl.so.9.0.0
+usr/lib/libppl_c.so
+usr/lib/libppl_c.so.4
+usr/lib/libppl_c.so.4.0.0
+usr/lib/libpwl.so
+usr/lib/libpwl.so.5
+usr/lib/libpwl.so.5.0.0

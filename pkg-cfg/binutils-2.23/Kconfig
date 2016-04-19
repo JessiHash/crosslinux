@@ -1,0 +1,7 @@
+config BLD_BINUTILS_2p23
+	bool
+	default n
+	prompt "Build binutils-2.23"
+	---help---
+	  Select this option to cross-build binutils; this is a linker, an
+	  assembler, and other tools for handling object files.

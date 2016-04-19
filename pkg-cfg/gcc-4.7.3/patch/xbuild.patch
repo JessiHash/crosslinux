@@ -1,0 +1,72 @@
+Author: Douglas Jerome <djerome@crosslinux.net>
+Date:   Sat Apr 19 23:06:44 MST 2014
+
+        Patch gcc/Makefile.in to not use target system header files when
+        building host-resident build-time helper programs.
+
+        Patch gcc/config/arm/linux-eabi.h so gcc will make code to use
+        /lib/ld-linux-armhf.so.3 for hard float.
+
+        Patch gcc/configure to have abnormal '--with-build-sysroot=' usage to
+        set a build-time configure-time reference to the target system header
+        files so that the gcc configure script does not look in the host build
+        system's header files to determine the target system's capabilities.
+
+        Patch libiberty/Makefile.in to avoid installing libiberty.
+
+        Signed-off-by: Douglas Jerome <djerome@crosslinux.net>
+
+diff -Naur gcc-4.7.3-OLD/gcc/Makefile.in gcc-4.7.3-NEW/gcc/Makefile.in
+--- gcc-4.7.3-OLD/gcc/Makefile.in	2013-04-01 01:11:11.000000000 -0700
++++ gcc-4.7.3-NEW/gcc/Makefile.in	2014-04-19 19:43:12.709157247 -0700
+@@ -760,7 +760,7 @@
+ 
+ # Native linker and preprocessor flags.  For x-fragment overrides.
+ BUILD_LDFLAGS=@BUILD_LDFLAGS@
+-BUILD_CPPFLAGS=$(ALL_CPPFLAGS)
++BUILD_CPPFLAGS=$(filter-out $(GMPINC) $(PPLINC) $(CLOOGINC), $(ALL_CPPFLAGS))
+ 
+ # Actual name to use when installing a native compiler.
+ GCC_INSTALL_NAME := $(shell echo gcc|sed '$(program_transform_name)')
+diff -Naur gcc-4.7.3-OLD/gcc/config/arm/linux-eabi.h gcc-4.7.3-NEW/gcc/config/arm/linux-eabi.h
+--- gcc-4.7.3-OLD/gcc/config/arm/linux-eabi.h	2011-11-02 08:03:19.000000000 -0700
++++ gcc-4.7.3-NEW/gcc/config/arm/linux-eabi.h	2014-04-19 22:51:51.470146952 -0700
+@@ -62,7 +62,12 @@
+ /* Use ld-linux.so.3 so that it will be possible to run "classic"
+    GNU/Linux binaries on an EABI system.  */
+ #undef  GLIBC_DYNAMIC_LINKER
+-#define GLIBC_DYNAMIC_LINKER "/lib/ld-linux.so.3"
++#define GLIBC_DYNAMIC_LINKER_SOFT_FLOAT "/lib/ld-linux.so.3"
++#define GLIBC_DYNAMIC_LINKER_HARD_FLOAT "/lib/ld-linux-armhf.so.3"
++#define GLIBC_DYNAMIC_LINKER \
++   "%{mfloat-abi=hard:" GLIBC_DYNAMIC_LINKER_HARD_FLOAT "} \
++    %{!mfloat-abi=hard:" GLIBC_DYNAMIC_LINKER_SOFT_FLOAT "}"
++
+ 
+ /* At this point, bpabi.h will have clobbered LINK_SPEC.  We want to
+    use the GNU/Linux version, not the generic BPABI version.  */
+diff -Naur gcc-4.7.3-OLD/gcc/configure gcc-4.7.3-NEW/gcc/configure
+--- gcc-4.7.3-OLD/gcc/configure	2013-02-06 08:23:55.000000000 -0700
++++ gcc-4.7.3-NEW/gcc/configure	2014-04-19 19:43:12.717157147 -0700
+@@ -26778,6 +26778,9 @@
+ else
+   target_header_dir=${native_system_header_dir}
+ fi
++if test "x$with_build_sysroot" != "x"; then
++  target_header_dir=${with_build_sysroot}
++fi
+ 
+ # Test for stack protector support in target C library.
+ { $as_echo "$as_me:${as_lineno-$LINENO}: checking __stack_chk_fail in target C library" >&5
+diff -Naur gcc-4.7.3-OLD/libiberty/Makefile.in gcc-4.7.3-NEW/libiberty/Makefile.in
+--- gcc-4.7.3-OLD/libiberty/Makefile.in	2012-08-06 07:34:27.000000000 -0700
++++ gcc-4.7.3-NEW/libiberty/Makefile.in	2014-04-19 19:43:12.760156609 -0700
+@@ -342,7 +342,7 @@
+ @MAINT@	echo stamp > stamp-functions
+ 
+ INSTALL_DEST = @INSTALL_DEST@
+-install: install_to_$(INSTALL_DEST) install-subdir
++install: 
+ install-strip: install
+ 
+ .PHONY: install install-strip

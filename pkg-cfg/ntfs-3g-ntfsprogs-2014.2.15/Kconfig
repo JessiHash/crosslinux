@@ -1,0 +1,7 @@
+config BLD_NTFS_3G_NTFSPROGS_2014p2p15
+	bool
+	default n
+	prompt "Build ntfs-3g_ntfsprogs-2014.2.15"
+	---help---
+	  Select this option to cross-build Tuxera NTFS-3G+Ntfsprogs.
+	  http://www.tuxera.com/community/ntfs-3g-download/

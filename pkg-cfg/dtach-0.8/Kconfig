@@ -1,0 +1,9 @@
+config BLD_DTACH_0p8
+	bool
+	default n
+	prompt "Build dtach-0.8"
+	---help---
+	  Select this option to cross-build dtach.  dtach is a program that
+	  emulates the detach feature of screen, , allowing you to run a
+	  program in an environment that is protected from the controlling
+	  terminal and attach to it later.

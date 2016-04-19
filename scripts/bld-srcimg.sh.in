@@ -4,7 +4,7 @@
 # This file is part of the crosslinux software.
 # The license which this software falls under is GPLv2 as follows:
 #
-# Copyright (C) 2013-2013 Douglas Jerome <djerome@crosslinux.org>
+# Copyright (C) 2013-2014 Douglas Jerome <djerome@crosslinux.org>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -29,6 +29,7 @@
 #
 # CHANGE LOG
 #
+#      2014-04-21  drj  Use distribution file system variable name.
 #      2013-07-12  drj  Adapted to crosslinux from the ttylinux build system.
 #
 # *****************************************************************************
@@ -371,20 +372,22 @@ package_sources_get "${manifest}"
 srclist_html_make   "${manifest}" "${htmlfile}"
 
 echo -n "i> Creating CD-ROM ISO image ......................... "
-rm --force ${TARGET_SRC_NAME}
+rm --force ${TARGET_DIST_SRC_NAME}
 _volid="${CONFIG_BRAND_NAME} ${CONFIG_RELEASE_VERS} ${CONFIG_BOARD}"
 genisoimage				\
 	-joliet				\
 	-rational-rock			\
-	-output ${TARGET_SRC_NAME}	\
+	-output ${TARGET_DIST_SRC_NAME}	\
 	-volid "${_volid}"		\
 	"${TARGET_PROJ_DIR}/target/source" >/dev/null 2>&1
 unset _volid
 echo "DONE"
 
+_distName="${TARGET_DIST_SRC_NAME}"
 echo ""
-ls --color -hl ${TARGET_SRC_NAME} | sed --expression="s|${TARGET_PROJ_DIR}/||"
+ls --color -hl ${_distName} | sed --expression="s|${TARGET_PROJ_DIR}/||"
 echo ""
+unset _distName
 
 popd >/dev/null 2>&1
 

@@ -1,0 +1,7 @@
+config BLD_GMP_5p0p5
+	bool
+	default n
+	prompt "Build gmp-5.0.5"
+	---help---
+	  Select this option to cross-build gmp, a support library mainly for
+	  gcc.

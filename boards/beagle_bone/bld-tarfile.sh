@@ -4,7 +4,7 @@
 # This file is part of the crosslinux software.
 # The license which this software falls under is GPLv2 as follows:
 #
-# Copyright (C) 2013-2013 Douglas Jerome <djerome@crosslinux.org>
+# Copyright (C) 2013-2014 Douglas Jerome <djerome@crosslinux.org>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -25,14 +25,18 @@
 # Main Program
 # *****************************************************************************
 
+_distFile="${TARGET_DIST_TAR_NAME}"
+
 echo -n "i> Zipping staging directory ......................... "
-rm -rf ${TARGET_TAR_NAME}
-tar -C sdcard/ -cjf ${TARGET_TAR_NAME} .
+rm -rf ${_distFile}
+tar -cjf ${_distFile} sdcard/ mnt/
 echo "DONE"
 
 echo ""
-ls --color -hl ${TARGET_TAR_NAME} | sed --expression="s|${TARGET_PROJ_DIR}/||"
-echo "i> distribution file $(basename ${TARGET_TAR_NAME}) is ready."
+ls --color -hl ${_distFile} | sed --expression="s|${TARGET_PROJ_DIR}/||"
+echo "i> distribution file $(basename ${_distFile}) is ready."
+
+unset _distFile
 
 
 # end of file

@@ -1,0 +1,9 @@
+config BLD_HASERL_0p9p32
+	bool
+	default n
+	prompt "Build haserl-0.9.32"
+	---help---
+	  Select this option to cross-build haserl.  haserl is a tiny (<30K)
+	  cgi wrapper that uses a UNIX shell or a Lua VM to provide PHP-like
+	  scripting for dynamic web content.  It transparently parses form
+	  data, including mime-formatted file uploads.

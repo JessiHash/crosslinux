@@ -1,30 +1,6 @@
-# vim: syntax=dosbatch
+# vim: syntax=cfg
 
-# -----------------------------------------------------------------------------
-
-# This is ttylinux BeagleBoard-xM
-#
-# echo "U-Boot Script [boot.scr] Running : BeagleBoard ${beaglerev}"
-# mmc init
-# mmc rescan 0
-# setenv rdaddr   0x81600000
-# setenv loadaddr 0x80300000
-# setenv bootargs console=ttyO2,115200n8 vram=12MB omapfb.mode=dvi:1024x768MR-16@60 root=/dev/ram0 rw ramdisk_size=24576 enet
-# fatload mmc 0 ${rdaddr} ramdisk.gz
-# fatload mmc 0 ${loadaddr} uImage
-# bootm ${loadaddr} ${rdaddr}
-
-# -----------------------------------------------------------------------------
-
-# This is BeagleBone ttylinux 14.1
-#
-# mmc_root=/dev/mmcblk0p2 rw
-# mmc_root_fs_type=ext4 rootwait
-# bootargs=console=ttyO0,115200n8 root=/dev/mmcblk0p2 rootfstype=ext4 rw ip=off login=ttyO0
-
-# -----------------------------------------------------------------------------
-
-# This is BeagleBone ttylinux 16.0 [U-Boot 2012.10]
+# u-boot script for BeagleBone ttylinux 2014.10 [U-Boot 2014.01]
 #
 # ===== interactive steps:
 # setenv bootargs "console=ttyO0,115200n8 root=/dev/mmcblk0p2 rw rootfstype=ext4 rootwait ip=off login=ttyO0"
@@ -39,6 +15,4 @@ bootargs=console=ttyO0,115200n8 root=/dev/mmcblk0p2 rw rootfstype=ext4 rootwait 
 bootfile=uImage
 devtree=am335x-bone.dtb
 uenvcmd=fatload mmc 0 ${loadaddr} ${bootfile}; fatload mmc 0 ${fdtaddr}  ${devtree}; bootm ${loadaddr} - ${fdtaddr}
-
-
 

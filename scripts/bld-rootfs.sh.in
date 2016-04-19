@@ -4,7 +4,7 @@
 # This file is part of the crosslinux software.
 # The license which this software falls under is GPLv2 as follows:
 #
-# Copyright (C) 2013-2013 Douglas Jerome <djerome@crosslinux.org>
+# Copyright (C) 2013-2014 Douglas Jerome <djerome@crosslinux.org>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -29,6 +29,7 @@
 #
 # CHANGE LOG
 #
+#      2014-04-21  drj  Use root file system variable name.
 #      2013-07-03  drj  Adapted to crosslinux from the ttylinux build system.
 #
 # *****************************************************************************
@@ -60,15 +61,15 @@ local -i nblocks=$((${CONFIG_ROOTFS_SIZE_MB} * 1024))
 
 echo -n "i> Making root file system image for an init RAM Disk ... "
 >${TARGET_MNT_DIR}/etc/.norootfsck
-rm --force "${TARGET_IRD_NAME}"
+rm --force "${TARGET_ROOT_IRD_NAME}"
 genext2fs				\
 	--reserved-percentage 0		\
 	--root "${TARGET_MNT_DIR}"	\
 	--size-in-blocks ${nblocks}	\
-	"${TARGET_IRD_NAME}"
+	"${TARGET_ROOT_IRD_NAME}"
 echo "DONE"
-ls -hl ${TARGET_IRD_NAME} | sed --expression="s|${TARGET_PROJ_DIR}/||"
-echo "i> Root file system image ${TARGET_IRD_NAME##*/} is ready."
+ls -hl ${TARGET_ROOT_IRD_NAME} | sed --expression="s|${TARGET_PROJ_DIR}/||"
+echo "i> Root file system image ${TARGET_ROOT_IRD_NAME##*/} is ready."
 
 }
 
@@ -82,15 +83,15 @@ rootfs_initramfs() {
 echo -n "i> Making a CPIO Archive for an initramfs ... "
 >${TARGET_MNT_DIR}/etc/.norootfsck
 pushd "${TARGET_MNT_DIR}" >/dev/null 2>&1
-rm --force "${TARGET_IFS_NAME}"
+rm --force "${TARGET_ROOT_IFS_NAME}"
 find . | cpio		\
 	--create	\
 	--format=newc	\
-	--no-absolute-filenames >${TARGET_IFS_NAME}
+	--no-absolute-filenames >${TARGET_ROOT_IFS_NAME}
 popd >/dev/null 2>&1
 echo "DONE"
-ls -hl ${TARGET_IFS_NAME} | sed --expression="s|${TARGET_PROJ_DIR}/||"
-echo "i> File system CPIO archive ${TARGET_IFS_NAME##*/} is ready."
+ls -hl ${TARGET_ROOT_IFS_NAME} | sed --expression="s|${TARGET_PROJ_DIR}/||"
+echo "i> File system CPIO archive ${TARGET_ROOT_IFS_NAME##*/} is ready."
 
 }
 
@@ -102,14 +103,14 @@ echo "i> File system CPIO archive ${TARGET_IFS_NAME##*/} is ready."
 rootfs_tarball() {
 
 echo -n "i> Making a bzip'd tarball of the root file system ... "
-rm --force "${TARGET_TAR_NAME}"
+rm --force "${TARGET_ROOT_TAR_NAME}"
 tar	--directory="${TARGET_MNT_DIR}"	\
 	--create			\
-	--file="${TARGET_TAR_NAME%.bz2}" .
-bzip2 "${TARGET_TAR_NAME%.bz2}"
+	--file="${TARGET_ROOT_TAR_NAME%.bz2}" .
+bzip2 "${TARGET_ROOT_TAR_NAME%.bz2}"
 echo "DONE"
-ls -hl ${TARGET_TAR_NAME} | sed --expression="s|${TARGET_PROJ_DIR}/||"
-echo "i> File system tarball ${TARGET_TAR_NAME##*/} is ready."
+ls -hl ${TARGET_ROOT_TAR_NAME} | sed --expression="s|${TARGET_PROJ_DIR}/||"
+echo "i> File system tarball ${TARGET_ROOT_TAR_NAME##*/} is ready."
 
 }
 
@@ -194,6 +195,10 @@ done;
 unset _p
 unset _pkglst
 unset _shareDir
+
+echo -n "i> mklost+found ... "
+(cd "${TARGET_MNT_DIR}"; mklost+found; ls -l)
+echo "DONE"
 
 echo -n "i> Updating birthdays ... "
 find "${TARGET_MNT_DIR}" -type d -o -type f \

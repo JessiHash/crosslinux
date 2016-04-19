@@ -4,7 +4,7 @@
 # This file is part of the crosslinux software.
 # The license which this software falls under is GPLv2 as follows:
 #
-# Copyright (C) 2013-2013 Douglas Jerome <djerome@crosslinux.org>
+# Copyright (C) 2013-2014 Douglas Jerome <djerome@crosslinux.org>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -29,6 +29,7 @@
 #
 # CHANGE LOG
 #
+#      2014-03-24  drj  Small fix to comment.
 #      2013-06-25  drj  New file generation.
 #
 # *****************************************************************************
@@ -50,73 +51,72 @@ cl_libdir="@@CL_LIBDIR@@"
 # *************************************************************************** #
 
 
-# *****************************************************************************
+# <--------------------------------------------------------- 132 columns ---------------------------------------------------------->
+# *********************************************************************************************************************************
 # Make a file to list the package contents.
-# *****************************************************************************
+# *********************************************************************************************************************************
 
 # Function Arguments:
 #      $1 ... ASCII file that is the file list
 
 package_list_make() {
 
-# The file list is an ASCII file that is the list of files from which to make
-# the binary package; it can have some scripting that interprets variables to
-# enable the selection of package files, so the file list needs some special
-# processing.  It is filtered, honoring any embedded scripting, and the actual
-# list of binary package files is created as ${TARGET_RUN_DIR}/files
+# The file list is an ASCII file that is the list of files from which to make the binary package; it can have some scripting that
+# interprets variables to control the list of files, so the file list needs some special processing to interpret the scripting.
+# The file list is filtered in this function, honoring any embedded scripting, and the actual list of binary package files is
+# created as ${TARGET_RUN_DIR}/files
 
-local cfgPkgFiles="$1"
-local pathname=""
+local cfgPkgFiles="$1" # This is a rooted full pathname of the files-list file.
+local pathname=""      # This is local variable for miscellaneous use.
 
 local -i lineNum=0
 local -i nestings=0
-local -i uselines=1
-local -i oldUseLine=1
+local -i uselines=1   # 1 indicates that lines from the files-list file are being used.  0 indicates lines are being skipped.
+local -i oldUseLine=1 # This makes a stack of one deep for the "uselines" flag.
 local -i retStat=0
 
 CL_logcom "***** Making Package File List"
 
-rm --force "${TARGET_RUN_DIR}/files"
->"${TARGET_RUN_DIR}/files"
+rm --force "${TARGET_RUN_DIR}/files" # This is the file that will have the explicit list of files names that is generated
+>"${TARGET_RUN_DIR}/files"           # by processing the source files-list file.
+
 while read; do
 	lineNum=$((${lineNum}+1))
+	[[ -z "${REPLY}"       ]] && continue || true # ......................................................... Skip blank lines.
+	[[ "${REPLY}" =~ ^\ *$ ]] && continue || true # .................................................... Skip whitespace lines.
+	[[ "${REPLY}" =~ ^\ *# ]] && continue || true # ....................................................... Skip comment lines.
 	if [[ "${REPLY}" =~ ^if\  ]]; then
-		# ................................... Interpret the 'if' lines.
+		# ....................................................................................... Interpret the 'if' lines.
 		if [[ ${nestings} == 1 ]]; then
-CL_logcom "E> Cannot nest scripting in pkg-cfg files-list file."
-CL_logcom "=> line ${lineNum}: \"${REPLY}\""
+			CL_logcom "E> Cannot nest scripting in pkg-cfg files-list file."
+			CL_logcom "=> line ${lineNum}: \"${REPLY}\""
 			continue
 		fi
 		set ${REPLY}
 		if [[ $# != 4 ]]; then
-CL_logcom "E> IGNORING malformed script in pkg-cfg files-list file."
-CL_logcom "=> line ${lineNum}: \"${REPLY}\""
+			CL_logcom "E> IGNORING malformed script in pkg-cfg files-list file."
+			CL_logcom "=> line ${lineNum}: \"${REPLY}\""
 			continue
 		fi
 		oldUseLine=${uselines}
 		eval [[ "\$$2" $3 "$4" ]] && uselines=1 || uselines=0
 		nestings=1
-CL_logcom "if \$$2 $3 $4 # -- nestings=${nestings} uselines=${uselines}"
+		CL_logcom "if \$$2 $3 $4 # -- nestings=${nestings} uselines=${uselines}"
 		continue
 	fi
 	if [[ "${REPLY}" =~ ^fi ]]; then
-		# ................................... Interpret the 'fi' lines.
+		# ....................................................................................... Interpret the 'fi' lines.
 		uselines=${oldUseLine}
 		nestings=0
-CL_logcom "fi # ------------- nestings=${nestings} uselines=${uselines}"
-		continue
-	fi
-	if [[ "${REPLY}" =~ ^\ *# ]]; then
-		# ................................ Interpret the comment lines.
-CL_logcom "Skipping ${REPLY}"
+		CL_logcom "fi # ------------- nestings=${nestings} uselines=${uselines}"
 		continue
 	fi
 	if [[ ${uselines} == 1 ]]; then
-		# ................................... Interpret the used lines.
+		# ....................................................................................... Interpret the used lines.
 		if [[ "${REPLY}" =~ ^\'glob\'\  ]]; then
-		# ....................................... Interpret file globs.
+		# ........................................................................................... Interpret file globs.
 			set ${REPLY}
-CL_logcom "Start 'glob' \"$2\""
+			CL_logcom "Start 'glob' \"$2\""
 			_p=""
 			for pathname in ${TARGET_SYSROOT_DIR}/$2; do
 				if [[ -f ${pathname} ]]; then
@@ -125,9 +125,33 @@ CL_logcom "Start 'glob' \"$2\""
 				fi
 			done
 			unset _p
-CL_logcom "End 'glob' \"$2\""
+			CL_logcom "End 'glob' \"$2\""
+		elif [[ "${REPLY}" =~ ^\'hardlink\'\  ]]; then
+			# ........................................................................... Interpret 'hardlinked' files.
+			set ${REPLY}
+			echo ";# Start 'hardlink' \"$2\" \"$3\""
+			for pathname in ${TARGET_SYSROOT_DIR}/$2; do
+				if [[ ${pathname} -ef ${TARGET_SYSROOT_DIR}/$3 ]]; then
+					_p=${pathname#${TARGET_SYSROOT_DIR}/}
+					echo ${_p} >>"${TARGET_RUN_DIR}/files"
+				fi
+			done
+			unset _p
+			echo ";# End 'hardlink' \"$2\" \"$3\""
+		elif [[ "${REPLY}" =~ ^\'symlink\'\  ]]; then
+			# ............................................................................ Interpret 'symlinked' files.
+			set ${REPLY}
+			echo ";# Start 'symlink' \"$2\" \"$3\""
+			for pathname in ${TARGET_SYSROOT_DIR}/$2; do
+				if [[ -h ${pathname} && "$(readlink ${pathname})" == "$3" ]]; then
+					_p=${pathname#${TARGET_SYSROOT_DIR}/}
+					echo ${_p} >>"${TARGET_RUN_DIR}/files"
+				fi
+			done
+			unset _p
+			echo ";# End 'symlink' \"$2\" \"$3\""
 		else
-		# ....................................... Interpret file names.
+		# ........................................................................................... Interpret file names.
 			eval "pathname=${REPLY}"
 			echo ${pathname} >>"${TARGET_RUN_DIR}/files"
 		fi
@@ -150,6 +174,7 @@ fi
 return ${retStat}
 
 }
+# <--------------------------------------------------------- 132 columns ---------------------------------------------------------->
 
 
 # *****************************************************************************
@@ -280,7 +305,9 @@ echo -n "f." >&${CONSOLE_FD}
 #
 find ${TARGET_SYSROOT_DIR} -newer INSTALL_STAMP | sort >> FILES
 sed -i "FILES" --expression="\#^${TARGET_SYSROOT_DIR}\$#d" >/dev/null 2>&1
+chmod 644 "FILES" # Code Issue [02] -- See "A2_Known_Issues_And_Problems.txt".
 sed -i "FILES" --expression="s|^${TARGET_SYSROOT_DIR}/||"  >/dev/null 2>&1
+chmod 644 "FILES" # Code Issue [02] -- See "A2_Known_Issues_And_Problems.txt".
 rm --force INSTALL_STAMP # All done with the INSTALL_STAMP file.
 
 # Strip when possible.
@@ -446,8 +473,8 @@ return 0
 # Set up the shell functions and environment variables.
 # *****************************************************************************
 
-# This script is expected to be invoked in the build/package/ directory.  Go up
-# to the project directory and setup the environment; do this with a hard-coded
+# This script is expected to be invoked in the build/bld/ directory.  Go up to
+# the project directory and setup the environment; do this with a hard-coded
 # path because there is no symbol yet.
 
 cd "../.."
@@ -472,7 +499,7 @@ cd "${TARGET_BLD_DIR}"
 #
 # $1 ... Package name, like "glibc-2.19".
 
-# This script is design to run in a particular context; it is expected to be
+# This script is designed to run in a particular context; it is expected to be
 # running under fakeroot and in the ${TARGET_BLD_DIR} directory; this script's
 # job is to complete the installation part of a package build process.  This
 # means the package build directory is in ${TARGET_BLD_DIR} and has been built
@@ -487,11 +514,20 @@ cd "${TARGET_BLD_DIR}"
 # "i."     - installing the package into sysroot
 # "f."     - finding installed files
 # "m_xxx." - looking for man pages to compress
+# "s."     - running site package script
 # "p."     - creating installable package
 
 package_install    "$1"
 package_find_files "$1" # and strip them if so asked
 manpage_compress   "$1"
+if [[ x"${CONFIG_SITE_SCRIPTS:-}" == x"y" ]]; then
+	if [[ -x ${TARGET_SITE_DIR}/bld-pkgs.sh ]]; then
+		echo -n "s." >&${CONSOLE_FD}
+		${TARGET_SITE_DIR}/bld-pkgs.sh "${TARGET_SYSROOT_DIR}" "$1"
+	else
+		echo -n ".." >&${CONSOLE_FD}
+	fi
+fi
 package_collect    "$1"
 
 

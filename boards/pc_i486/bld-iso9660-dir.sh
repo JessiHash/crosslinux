@@ -4,7 +4,7 @@
 # This file is part of the crosslinux software.
 # The license which this software falls under is GPLv2 as follows:
 #
-# Copyright (C) 2013-2013 Douglas Jerome <djerome@crosslinux.org>
+# Copyright (C) 2013-2014 Douglas Jerome <djerome@crosslinux.org>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -36,11 +36,11 @@ done; unset _f
 unset _dest
 chmod 644 cdrom/boot/isolinux/*
 if [[ x"${CONFIG_ROOTFS_INITRD:-}" == x"y" ]]; then
-	cp ${TARGET_IRD_NAME} cdrom/boot/filesys
+	cp ${TARGET_ROOT_IRD_NAME} cdrom/boot/filesys
 	chmod 644 cdrom/boot/filesys
 fi
 if [[ x"${CONFIG_ROOTFS_INITRAMFS:-}" == x"y" ]]; then
-	cp ${TARGET_IFS_NAME} cdrom/boot/filesys
+	cp ${TARGET_ROOT_IFS_NAME} cdrom/boot/filesys
 	chmod 644 cdrom/boot/filesys
 fi
 if [[ x"${CONFIG_INCLUDE_MEDIA_DEBUG_KERNEL:-}" == x"y" ]]; then

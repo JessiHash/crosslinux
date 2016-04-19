@@ -72,7 +72,13 @@ pkg_install() {
 PKG_STATUS="install error"
 
 if [[ -d "rootfs/" ]]; then
-	find "rootfs/" ! -type d -exec touch {} \;
+	if [[ -e "${TARGET_SYSROOT_DIR}/dev/console" ]]; then
+		rm --force rootfs/dev/console
+	fi
+	if [[ -e "${TARGET_SYSROOT_DIR}/dev/null" ]]; then
+		rm --force rootfs/dev/null
+	fi
+	find "rootfs/" ! -type d ! -type l -exec touch {} \;
 	cp --archive --force rootfs/* "${TARGET_SYSROOT_DIR}"
 fi
 

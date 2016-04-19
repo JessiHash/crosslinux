@@ -1,0 +1,7 @@
+config BLD_CALC_2p12p4p13
+	bool
+	default n
+	prompt "Build calc-2.12.4.13"
+	---help---
+	  Select this option to cross-build calc, a C-style arbitrary precision
+	  calculator.

@@ -1,7 +1,7 @@
 # This file is part of the crosslinux software.
 # The license which this software falls under is GPLv2 as follows:
 #
-# (C) 2013-2013 Douglas Jerome <djerome@crosslinux.org>
+# (C) 2013-2014 Douglas Jerome <djerome@crosslinux.org>
 #
 # This program is free software; you can redistribute it and/or modify it
 # under the terms of the GNU General Public License as published by the Free
@@ -43,6 +43,8 @@
 #
 # CHANGE LOG
 #
+#      2014-11-27  drj  Changed from fakeroot-1.20 to fakeroot-1.20.2
+#      2014-01-11  drj  Changed from fakeroot-1.19 to fakeroot-1.20
 #      2013-07-01  drj  File creation.
 #
 # *****************************************************************************
@@ -111,8 +113,10 @@ export SHELL=@BASH@
 export GREP_OPTIONS=
 
 FAKEROOT_URL := http://ftp.debian.org/debian/pool/main/f/fakeroot
-FAKEROOT_ZIP := fakeroot_1.19.orig.tar.bz2
-FAKEROOT_DIR := fakeroot-1.19
+# FAKEROOT_ZIP := fakeroot_1.20.2.orig.tar.bz2
+FAKEROOT_ZIP := fakeroot_1.18.4.orig.tar.bz2
+# FAKEROOT_DIR := fakeroot-1.20.2
+FAKEROOT_DIR := fakeroot-1.18.4
 
 GENEXT2FS_URL := http://sourceforge.net/projects/genext2fs/files/genext2fs/1.4.1
 GENEXT2FS_ZIP := genext2fs-1.4.1.tar.gz

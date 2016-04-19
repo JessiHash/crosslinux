@@ -1,0 +1,16 @@
+if BLD_GCC_4p7p3
+
+config BLD_CROSSLINUX_LIBC_DEVEL
+	bool
+	default y
+	prompt "libc-devel -- from the cross-tool chain."
+	---help---
+	  You must have libc-devel if you want to develop code with gcc.  This
+	  package has the /usr/include header files and the C run-time start
+	  and end files in /usr/lib.
+
+config FORCE_LIBC_DEVEL
+	def_bool y
+	select BLD_CROSSLINUX_LIBC_DEVEL
+
+endif

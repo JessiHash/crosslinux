@@ -10,51 +10,56 @@ endmenu
 # ------------------------------------------------------------------- libraries
 menu "Libraries"
 source @@CL_LIBDIR@@/pkg-cfg/ncurses-5.9/Kconfig
-# source @@CL_LIBDIR@@/pkg-cfg/readline-6.2/Kconfig
-# source @@CL_LIBDIR@@/pkg-cfg/alsa-lib-1.0.27/Kconfig
-# source @@CL_LIBDIR@@/pkg-cfg/gmp-5.0.5/Kconfig
-# source @@CL_LIBDIR@@/pkg-cfg/mpfr-3.1.1/Kconfig
-# source @@CL_LIBDIR@@/pkg-cfg/mpc-1.0.1/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/readline-6.3/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/alsa-lib-1.0.28/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/gmp-5.0.5/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/mpfr-3.1.1/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/ppl-0.11/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/cloog-0.16.1/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/mpc-1.0.1/Kconfig
 endmenu
 
 # ------------------------------------------------------------- system programs
 menu "System Programs"
-source @@CL_LIBDIR@@/pkg-cfg/util-linux-2.23/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/util-linux-2.24/Kconfig
 source @@CL_LIBDIR@@/pkg-cfg/bash-4.2/Kconfig
-source @@CL_LIBDIR@@/pkg-cfg/busybox-1.21.0/Kconfig
-source @@CL_LIBDIR@@/pkg-cfg/e2fsprogs-1.42.8/Kconfig
-source @@CL_LIBDIR@@/pkg-cfg/kmod-13/Kconfig
-source @@CL_LIBDIR@@/pkg-cfg/lilo-23.2/Kconfig
-# source @@CL_LIBDIR@@/pkg-cfg/ntfs-3g_ntfsprogs-2013.1.13/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/busybox-1.22.1/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/e2fsprogs-1.42.9/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/kmod-16/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/lilo-24.0/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/ntfs-3g-ntfsprogs-2014.2.15/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/ttylinux-utils-1.6/Kconfig
 source @@CL_LIBDIR@@/pkg-cfg/udev-182/Kconfig
 # source @@CL_LIBDIR@@/pkg-cfg/yaboot-1.3.13/Kconfig
 endmenu
 
 # ----------------------------------------------------------- development tools
 menu "Development Tools"
-# source @@CL_LIBDIR@@/pkg-cfg/binutils-2.23/Kconfig
-# source @@CL_LIBDIR@@/pkg-cfg/gcc-4.6.3/Kconfig
-# source @@CL_LIBDIR@@/pkg-cfg/make-3.82/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/binutils-2.23/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/gcc-4.7.3/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/make-4.0/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/crosslinux-libc-devel/Kconfig
 endmenu
 
 # ------------------------------------------------------------ service programs
 menu "Service Programs"
-source @@CL_LIBDIR@@/pkg-cfg/dropbear-2013.58/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/dropbear-2014.63/Kconfig
 source @@CL_LIBDIR@@/pkg-cfg/gpm-1.20.7/Kconfig
 source @@CL_LIBDIR@@/pkg-cfg/iptables-1.4.18/Kconfig
 source @@CL_LIBDIR@@/pkg-cfg/ppp-2.4.5/Kconfig
-# source @@CL_LIBDIR@@/pkg-cfg/thttpd-2.25b/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/thttpd-2.25b/Kconfig
 endmenu
 
 # ---------------------------------------------------------------- applications
 menu "Applications"
-# source @@CL_LIBDIR@@/pkg-cfg/alsa-utils-1.0.27/Kconfig
-# source @@CL_LIBDIR@@/pkg-cfg/calc-2.12.4.4/Kconfig
-# source @@CL_LIBDIR@@/pkg-cfg/dtach-0.8/Kconfig
-# source @@CL_LIBDIR@@/pkg-cfg/dvtm-0.9/Kconfig
-# source @@CL_LIBDIR@@/pkg-cfg/haserl-0.9.29/Kconfig
-# source @@CL_LIBDIR@@/pkg-cfg/lua-5.2.2/Kconfig
-# source @@CL_LIBDIR@@/pkg-cfg/lynx-2.8.7/Kconfig
-# source @@CL_LIBDIR@@/pkg-cfg/nano-2.2.6/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/alsa-utils-1.0.28/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/calc-2.12.4.13/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/dtach-0.8/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/dvtm-0.11/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/haserl-0.9.32/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/lua-5.2.3/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/lynx-2.8.8/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/nano-2.3.2/Kconfig
 source @@CL_LIBDIR@@/pkg-cfg/retawq-0.2.6c/Kconfig
+source @@CL_LIBDIR@@/pkg-cfg/tree-1.7.0/Kconfig
 endmenu

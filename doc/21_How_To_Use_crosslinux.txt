@@ -13,6 +13,11 @@ Copyright: (C) 2013 Douglas Jerome <djerome@crosslinux.org>
 4. Link to the Cross-tool Chain
 5. Build the Cross-tool Chain
 6. Build the Target Linux System
+7. Description of cl-bt Commands
+   7.1 Build Tool System Commands
+   7.2 Housekeeping Commands
+   7.3 Build Commands
+8. Boot Schema
 
         ----------------------------------------------------------------
         This file describes the steps for using crosslinux to make
@@ -34,13 +39,13 @@ crosslinux from that build directory into ~/projects/crosslinux, and now you
 want to use the installed crosslinux build tool.
 
 From "12_How_To_Setup_crosstool-NG.txt", the cross-tool chain builder,
-crosstool-NG, is installed in the directory ~/projects/crosstool-ng-1.18.0/
+crosstool-NG, is installed in the directory ~/projects/crosstool-ng-1.19.0/
 
 So for the examples in this file, you have these directories:
 
 ~/projects/cl-dev/ ................ original crosslinux source/build directory
 ~/projects/crosslinux/ ............ crosslinux installed in here
-~/projects/crosstool-ng-1.18.0/ ... crosstool-NG installed in here
+~/projects/crosstool-ng-1.19.0/ ... crosstool-NG installed in here
 
 ------------------
 2. Start a Project
@@ -91,7 +96,7 @@ delete this configuration file in the next step.
 3. Make Site-specific Customization
 -----------------------------------
 
-Notive the ~/projects/cl-dev/integ directory has a ttylinux-i486-<version>
+Notice the ~/projects/cl-dev/integ directory has a ttylinux-i486-<version>
 directory.  This directory has the crosslinux configuration for making the
 latest version of ttylinux-i486.
 
@@ -102,8 +107,8 @@ the target Linux system be ttylinux-i486.  Use the actual version number for
 <version> in the example script commands below.
 
 $ rm crosslinux-config.sh
-$ cp ~/projects/cl-dev/integ/ttylinux-i486-<version>/crosslinux-config.sh .
-$ tar xf ~/projects/cl-dev/integ/ttylinux-i486-<version>/site.tbz
+$ cp ~/projects/cl-dev/integ/ttylinux-i486-2014.11/crosslinux-config.sh .
+$ tar xf ~/projects/cl-dev/integ/ttylinux-i486-2014.11/site.tbz
 
 You can understand most of the site directory by looking through the menuconfig
 items and the items in the site directory.  An explanation of all the items in
@@ -155,8 +160,9 @@ crosstool-NG configuration file used to make the i486 cross-tool chain.  Copy
 this file to the crosstool-NG directory and give the command to make the
 cross-tool chain.
 
-$ cd ~/projects/crosstool-ng-1.18.0/
-$ cp ~/projects/cl-dev/integ/ttylinux-i486-<version>/crosstool-ng.config .config
+$ cd ~/projects/crosstool-ng-1.19.0/
+$ cp ~/projects/cl-dev/integ/ttylinux-i486-2014.11/crosstool-ng.config .config
+*** ERROR *** : setup some paths in the .config file.
 $ ./ct-ng build
 
 Have a coffee; the cross-tool chain build will take a few minutes.  Maybe go
@@ -188,5 +194,167 @@ $ cl-bt bootfs
 $ cl-bt bootimg
 
 Find the ISO image file in the target/image/ directory.
+
+--------------------------------
+7. Description of cl-bt Commands
+--------------------------------
+
+------------------------------
+7.1 Build Tool System Commands
+------------------------------
+
+-------------------------
+7.2 Housekeeping Commands
+-------------------------
+
+------------------
+7.3 Build Commands
+------------------
+
+These commands make more sense if you know the build process is performed in
+six particular steps.  These steps are:
+
+     1. pkgs    - Make the packages.
+     2. loader  - Make the boot loader.
+     3. kernel  - Make the kernel.
+     4. rootfs  - Make the root file system.
+     5. bootfs  - Make the boot file system; staging directory for bootimg.
+     6. bootimg - Make the image file of the boot file system.
+
+Command           Description
+-------           -------------------------------------------------------------
+
+cl-bt dist ...... Do the whole build.  Build the packages, the boot loader, the
+                  kernel, and then make the root file system, the staging
+                  directory for the boot file system, and then finally make the
+                  image file of the boot file system.  These steps can be done
+                  individually; see the commands below.
+
+cl-bt stat ...... Report the status of the build process, in terms of the six
+                  build steps and whether or not they are each done.  Look for
+                  the work 'NOT'.
+
+cl-bt clean ..... Remove the all of the built items: packages, boot loader,
+                  kernel, root file system, boot file system, and the image
+                  file of the boot file system.
+
+cl-bt kclean .... Remove the kernel build; this deletes the kernel and any
+                  kernel modules.
+
+cl-bt lclean .... Remove the loader build; this deleted the boot loader file(s).
+
+cl-bt pclean .... Remove the all the built packages.
+
+cl-bt pkgs ...... Build the only the packages; they are listed in a build
+                  configuration file named 'crosslinux-pkglst.txt'.
+
+cl-bt pkgs_ ..... Continue building the packages in the case the package
+                  building was interrupted.  This is a developer convenience
+                  when debugging or developing a package build process.
+
+cl-bt loader .... Build the target boot loader; do this before building the
+                  kernel because the kernel build process may use it.
+
+cl-bt kernel .... Build the target kernel.
+
+cl-bt rootfs .... Build root file system and put it into an initrd, or an
+                  initramfs, or a tarball.  There may be no choice allowed; a
+                  given target platform may be limited to one method.
+                  See the crosslinux target boot schema in section 8.
+
+cl-bt bootfs .... Build boot staging directory for iso9660 or for tarball.
+                  There may be no choice allowed; a given target platform may
+                  be limited to one method.
+                  See the crosslinux target boot schema in section 8.
+
+cl-bt bootimg ... Build boot file system image: iso9660 or tarball.  There may
+                  be no choice allowed; a given target platform may be limited
+                  to one method.
+                  See the crosslinux target boot schema in section 8.
+
+--------------
+8. Boot Schema
+--------------
+
+The tables herein need a wider window to clearly see.
+<-------------------------------------------------------------------------------------------------->
+
+This section describes the crosslinux target system boot preparation as
+performed by the build commands describe above.  There are different boot
+schemes for different target platforms.
+
+Table 8-1 "Boot Schema Matrix" shows possible output result of cl-bt commands
+that make the root and boot file systems.  The output result for each of these
+cl-bt commands depends upon the type of root file system to be made for the
+particular target platform i.e., pc_i486, pc_i686, pc_x86_64, mac_g4,
+beaglebone, etc.
+
+NOTICE  Most of the entries in the table 8-1 "Boot Schema Matrix" are not
+        implemented or not properly handled by the crosslinux build tool.  See
+        list 8-1 "Processes for Making the Target Boot Systems" following the
+        table.
+
+                            ------------------------------------------
+                            ***** Table 8-1 "Boot Schema Matrix" *****
+                            ------------------------------------------
+
+cl-bt                                                                           cl-bt
+Command            Type of Root File System         Appropriate Boot Media      Command Notes
+---+---            ------------v-----------         ---+------------------      -------+-----
+   |                           |                       |                               |
+   |           ----------------^-----------------      |                               |
+   |          |                                  |     |                               |
+   |          |            ram disk              |     |                               |
+   |           initramfs     intrd     persistent      |                               |
+   V           ==========  ==========  ==========      V                               V
+                                                  |
+cl-bt rootfs   cpio arch   fs img      NA         | CD-ROM                {Make a root file system.}
+               cpio arch   fs img      tarball    | SDCard
+               cpio arch   fs img      tarball    | USB Drive
+               cpio arch   fs img      tarball    | HD Partition
+                                                  |
+cl-bt bootfs   dir struct  dir struct  NA         | CD-ROM           {Add boot to root file system.}
+               dir struct  dir struct  dir struct | SDCard
+               dir struct  dir struct  dir struct | USB Drive
+               dir struct  dir struct  dir struct | HD Partition
+                                                  |
+cl-bt bootimg  iso img     iso img     NA         | CD-ROM            {Make boot file system image.}
+               tarball     tarball     tarball    | SDCard
+               tarball     tarball     tarball    | USB Drive
+               tarball     tarball     tarball    | HD Partition
+                                                  |
+cl-bt media    cdrecord    cdrecord    NA         | CD-ROM                 {Format and write media.}
+               txfer       txfer       install    | SDCard
+               txfer       txfer       install    | USB Drive
+               txfer       txfer       install    | HD Partition
+
+     NA ....... Not Applicable
+     fs img ... RAM Disk File System Image
+
+List 8-1 "Processes for Making the Target Boot Systems" shows the actual output
+results of the crosslinux build tool commands for the various target platforms.
+Some target platforms may have several options for booting, such as root file
+system format for ephemeral systems (Live CD-ROM) or whether to be a persistent
+hard drive based system.
+
+                -------------------------------------------------------------------
+                ***** List 8-1 "Processes for Making the Target Boot Systems" *****
+                -------------------------------------------------------------------
+
+Target Platform   Root FS   cl-bt Command     Output Result
+---------------   -------   -------------     -------------
+
+pc_i486           initrd    cl-bt rootfs .... RAM Disk File System Image
+                            cl-bt bootfs .... Bootable ISO9660 Directory Tree, With Extras [*]
+                            cl-bt bootimg ... Bootable ISO9660 File Image
+                            cl-bt media ..... (not implemented)
+
+beaglebone        tarball   cl-bt rootfs .... File System Tarball
+                            cl-bt bootfs .... Model Bootable ISO9660 Directory Tree, With Extras [*]
+                            cl-bt bootimg ... Tarball of Model Bootable ISO9660 Directory Tree [1]
+                            cl-bt media ..... (not implemented)
+
+                            [*] - staging area for next command
+                            [1] - overwrites the file system tarball
 
 [eof]

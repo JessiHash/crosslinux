@@ -1,0 +1,9 @@
+# vim: syntax=sh
+etc/rc.d/init.d/context
+etc/rc.d/init.d/rnd-pwd
+home/user/README-problems.txt
+root/README-problems.txt
+root/install.conf
+sbin/ttylinux-flash
+sbin/ttylinux-installer
+usr/bin/pacman

@@ -1,0 +1,8 @@
+config BLD_READLINE_6p3
+	bool
+	default n
+	prompt "Build readline-6.3"
+	---help---
+	  Select this option to cross-build readline.  This makes the
+	  dynamic and static libreadline and libhistory libraries; the header
+	  files are also included.

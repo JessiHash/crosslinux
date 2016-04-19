@@ -1,0 +1,6 @@
+config BLD_LYNX_2p8p8
+	bool
+	default n
+	prompt "Build lynx-2.8.8"
+	---help---
+	  Select this option to cross-build lynx.  lynx is a text web browser.

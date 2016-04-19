@@ -109,6 +109,7 @@ PKG_STATUS="make error"
 cd "${PKG_DIR}"
 source "${CROSSLINUX_SCRIPT_DIR}/_xbt_env_set"
 PATH="${CONFIG_XTOOL_BIN_DIR}:${PATH}" make \
+	LDFLAGS="$LDFLAGS -lrt" \
 	--jobs=${NJOBS} \
 	CROSS_COMPILE=${CONFIG_XTOOL_NAME}- || return 0
 source "${CROSSLINUX_SCRIPT_DIR}/_xbt_env_clr"
@@ -131,6 +132,7 @@ PKG_STATUS="install error"
 cd "${PKG_DIR}"
 source "${CROSSLINUX_SCRIPT_DIR}/_xbt_env_set"
 PATH="${CONFIG_XTOOL_BIN_DIR}:${PATH}" make \
+	CROSS_COMPILE=${CONFIG_XTOOL_NAME}- \
 	DESTDIR=${TARGET_SYSROOT_DIR} \
 	install || return 0
 for ruleFile in "${TARGET_SYSROOT_DIR}/lib/udev/rules.d"/*; do
@@ -138,6 +140,7 @@ for ruleFile in "${TARGET_SYSROOT_DIR}/lib/udev/rules.d"/*; do
 		--expression="s/GROUP=\"dialout\"/GROUP=\"uucp\"/" \
 		--expression="s/GROUP=\"tape\"/GROUP=\"disk\"/" \
 		${ruleFile}
+                chmod 644 "${ruleFile}" # Code Issue [02] -- See "A2_Known_Issues_And_Problems.txt".
 done; unset ruleFile
 source "${CROSSLINUX_SCRIPT_DIR}/_xbt_env_clr"
 cd ..

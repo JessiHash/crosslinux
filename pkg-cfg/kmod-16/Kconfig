@@ -1,0 +1,7 @@
+config BLD_KMOD_16
+	bool
+	default n
+	prompt "Build kmod-16"
+	---help---
+	  Select this option to cross-build kmod.  This package has libraries
+	  and utilities for loading kernel modules, such as 'insmod' and 'lsmod.

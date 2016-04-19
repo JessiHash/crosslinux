@@ -3,4 +3,4 @@ config BLD_BASH_4p2
 	default y
 	prompt "Build bash-4.2"
 	---help---
-	  Select this option to cross-build bash.
+	  Select this option to cross-build bash, the Bourne-Again SHell.

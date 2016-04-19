@@ -1,0 +1,6 @@
+config BLD_GCC_4p7p3
+	bool
+	default n
+	prompt "Build gcc-4.7.3"
+	---help---
+	  Select this option to cross-build gcc.  Yeah!

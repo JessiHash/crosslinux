@@ -127,6 +127,7 @@ rm --force ${TARGET_SYSROOT_DIR}/sbin/iptables-restore
 rm --force ${TARGET_SYSROOT_DIR}/sbin/iptables-save
 rm --force ${TARGET_SYSROOT_DIR}/sbin/xptables-multi
 PATH="${CONFIG_XTOOL_BIN_DIR}:${PATH}" make \
+	CROSS_COMPILE=${CONFIG_XTOOL_NAME}- \
 	DESTDIR=${TARGET_SYSROOT_DIR} \
 	install || return 0
 rm --force ${TARGET_SYSROOT_DIR}/bin/iptables-xml

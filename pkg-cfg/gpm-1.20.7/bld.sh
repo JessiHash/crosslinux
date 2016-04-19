@@ -114,6 +114,7 @@ PKG_STATUS="install error"
 cd "${PKG_DIR}"
 source "${CROSSLINUX_SCRIPT_DIR}/_xbt_env_set"
 PATH="${CONFIG_XTOOL_BIN_DIR}:${PATH}" make \
+	CROSS_COMPILE=${CONFIG_XTOOL_NAME}- \
 	DESTDIR=${TARGET_SYSROOT_DIR} \
 	install || return 1
 source "${CROSSLINUX_SCRIPT_DIR}/_xbt_env_clr"
